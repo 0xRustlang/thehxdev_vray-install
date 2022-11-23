@@ -578,10 +578,10 @@ function bbr_boost() {
 function configure_user_management() {
     echo -e "checking..."
     if [[ ! -e "${config_path}" ]]; then
-        print_error "can't find xray config. Seems like you don't installed xray"
+        print_error "can't find v2ray config. Seems like you don't installed v2ray"
         exit 1
     else
-        print_ok "xray is installed"
+        print_ok "v2ray is installed"
     fi
 
     if grep -q -E -o "[1-9]{1,3}@" ${config_path} ; then
@@ -672,7 +672,7 @@ function vmess_ws_tls() {
     basic_optimization
     ip_check
     domain_check
-    xray_install
+    vray_install
     configure_certbot
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/VMess-Websocket-TLS-s/config_server.json
     judge "Download configuration"
@@ -727,7 +727,7 @@ function vmess_ws_nginx_tls() {
     configure_certbot
     port_exist_check 80
     port_exist_check 443
-    xray_install
+    vray_install
     install_nginx
     configure_nginx_reverse_proxy_tls
     add_wsPath_to_nginx
@@ -782,7 +782,7 @@ function vmess_tcp_tls() {
     ip_check
     domain_check
     configure_certbot
-    xray_install
+    vray_install
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/VMess-TCP-TLS-s/config_server.json
     judge "Download configuration"
     modify_port
@@ -837,7 +837,7 @@ function trojan_tcp_tls() {
     basic_optimization
     ip_check
     domain_check
-    xray_install
+    vray_install
     configure_certbot
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/Trojan-TCP-TLS-s/config_server.json
     judge "Download configuration"
@@ -891,7 +891,7 @@ function trojan_ws_tls() {
     basic_optimization
     ip_check
     domain_check
-    xray_install
+    vray_install
     configure_certbot
     #get_ssl_cert
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/Trojan-Websocket-TLS-s/config_server.json
@@ -916,7 +916,7 @@ function dokodemo_door_setup() {
     install_deps
     basic_optimization
     ip_check
-    xray_install
+    vray_install
     read -rp "Enter Listening Port: " LISTENING_PORT
     read -rp "Enter Foreign Server IP Address: " FOREIGN_SERVER_IP
     read -rp "Enter Foreign Server Port: " FOREIGN_SERVER_PORT
@@ -965,8 +965,7 @@ function shecan_dns() {
 
 # Get Config Link
 function save_protocol() {
-    if [[ -e "/usr/local/etc/xray" ]]; then
-        #echo "${CONFIG_PROTO}" > /usr/local/etc/xray/proto.txt
+    if [[ -e "/root/docker-compose.yaml" ]]; then
         echo "${CONFIG_PROTO}" > ${proto_file}
     fi
 }
@@ -1274,7 +1273,7 @@ function read_current_config() {
         current_network=$(cat ${config_path} | jq .inbounds[0].streamSettings.network)
         current_ws_path=$(cat ${config_path} | jq .inbounds[0].streamSettings.wsSettings.path)
         current_security=$(cat ${config_path} | jq .inbounds[0].streamSettings.security)
-        current_active_connections=$(ss -tnp | grep "xray" | awk '{print $5}' | grep "\[::ffff" | grep -Eo "[0-9]{1,3}(\.[0-9]{1,3}){3}" | sort | uniq | wc -l)
+        #current_active_connections=$(ss -tnp | grep "xray" | awk '{print $5}' | grep "\[::ffff" | grep -Eo "[0-9]{1,3}(\.[0-9]{1,3}){3}" | sort | uniq | wc -l)
 
         echo -e "========================================="
         echo -e "Users Count: ${current_users_count}"
@@ -1300,64 +1299,15 @@ function read_current_config() {
 
         echo -e "Security: ${current_security}"
 
-        if [[ -n ${current_active_connections} ]]; then
-            echo -e "Active Connections: ${current_active_connections}"
-        fi
+        #if [[ -n ${current_active_connections} ]]; then
+        #    echo -e "Active Connections: ${current_active_connections}"
+        #fi
 
         echo -e "========================================="
     else
-        print_error "Xray config NOT found! Probably Xray is not installed!"
+        print_error "v2ray config NOT found! Probably v2ray is not installed!"
         exit 1
     fi
-}
-
-# ===================================== #
-
-function get_ssl_certificate() {
-    check_bash
-    check_root
-    check_os
-
-    #if [ -e "/ssl/xray.crt" && -e "/ssl/xray.key" ]; then
-    #	print_info "You Already have SSL certificates for Xray! Do you want to remove them? [y/n]"
-    #	read -r remove_ssl_certs
-    #	case $remove_ssl_certs in
-    #	[yY][eE][sS] | [yY])
-    #		apt purge certbot python3-certbot -y
-    #		rm -rf /etc/letsencrypt/
-    #		rm -rf /var/log/letsencrypt/
-    #		rm -rf /etc/systemd/system/*certbot*
-    #		rm -rf /ssl/
-    #		;;
-    #	*) ;;
-    #	esac
-    #fi
-
-    disable_firewalls
-    install_deps
-    basic_optimization
-    ip_check
-    domain_check
-
-    if [[ ! -e "/usr/local/bin/xray" && ! -e "${vray_conf_dir}" ]]; then
-        xray_install
-    else
-        print_ok "xray is already installed"
-    fi
-
-    if id -u nobody >/dev/null; then
-        print_ok "user nobody exist"
-        groupadd nobody
-        gpasswd -a nobody nobody
-        judge "add nobody user to nobody group"
-    else
-        useradd nobody
-        judge "create nobody user"
-        groupadd nobody
-        gpasswd -a nobody nobody
-        judge "add nobody user to nobody group"
-    fi
-    configure_certbot
 }
 
 # ===================================== #
