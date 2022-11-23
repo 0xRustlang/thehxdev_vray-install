@@ -17,14 +17,10 @@ vray_docker_compose_file="/root/docker-compose.yaml"
 config_path="/etc/v2ray/config.json"
 users_count_file="/etc/vray/users_count.txt"
 users_number_in_config_file="/etc/vray/users_number_in_config.txt"
-#access_log_path="/var/log/xray/access.log"
 users_expiry_date_file="/etc/vray/users_expiry_date.txt"
 proto_file="/etc/vray/proto.txt"
 backup_dir="/root/vray_backup"
 website_dir="/var/www/html" 
-#access_log="/var/log/xray/access.log"
-#error_log="/var/log/xray/error.log"
-#cert_dir="/root/.ssl"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 nginx_conf="/etc/nginx/sites-available/default"
@@ -230,7 +226,7 @@ function domain_check() {
         print_ok "The DNS-resolved IP address of the domain name matches the native IPv6 address"
         sleep 2
     else
-        print_error "Please make sure that the correct A/AAAA records are added to the domain name, otherwise xray will not work properly"
+        print_error "Please make sure that the correct A/AAAA records are added to the domain name, otherwise V2ray will not work properly"
         print_error "The IP address of the domain name resolved through DNS does not match the native IPv4/IPv6 address, 
         do you want to continue the installation? (y/n)" && read -r install
         case $install in
@@ -265,7 +261,7 @@ function vray_tmp_config_file_check_and_use() {
     if [[ -s ${vray_conf_dir}/config_tmp.json ]]; then
         mv -f ${vray_conf_dir}/config_tmp.json ${vray_conf_dir}/config.json
     else
-        print_error "can't modify xray config file!"
+        print_error "can't modify V2ray config file!"
         exit 1
     fi
     touch ${vray_conf_dir}/config_tmp.json
@@ -437,38 +433,38 @@ function modify_port() {
     port_exist_check $PORT
     cat ${vray_conf_dir}/config.json | jq 'setpath(["inbounds",0,"port"];'${PORT}')' >${vray_conf_dir}/config_tmp.json
     vray_tmp_config_file_check_and_use
-    judge "Xray port modification"
+    judge "V2ray port modification"
 }
 
 function modify_UUID() {
     [ -z "$UUID" ] && UUID=$(cat /proc/sys/kernel/random/uuid)
     cat ${vray_conf_dir}/config.json | jq 'setpath(["inbounds",0,"settings","clients",0,"id"];"'${UUID}'")' >${vray_conf_dir}/config_tmp.json
-    judge "modify Xray UUID"
+    judge "modify V2ray UUID"
     vray_tmp_config_file_check_and_use
     judge "change tmp file to main file"
 }
 
 function modify_ws() {
     cat ${vray_conf_dir}/config.json | jq 'setpath(["inbounds",0,"streamSettings","wsSettings","path"];"'${WS_PATH}'")' >${vray_conf_dir}/config_tmp.json
-    judge "modify Xray ws"
+    judge "modify V2ray ws"
     vray_tmp_config_file_check_and_use
     judge "change tmp file to main file"
 }
 
 function modify_tls() {
     cat ${vray_conf_dir}/config.json | jq 'setpath(["inbounds",0,"streamSettings","tlsSettings","certificates",0,"certificateFile"];"'${certFile}'")' >${vray_conf_dir}/config_tmp.json
-    judge "modify Xray TLS Cert File"
+    judge "modify V2ray TLS Cert File"
     vray_tmp_config_file_check_and_use
     judge "change tmp file to main file"
     cat ${vray_conf_dir}/config.json | jq 'setpath(["inbounds",0,"streamSettings","tlsSettings","certificates",0,"keyFile"];"'${keyFile}'")' >${vray_conf_dir}/config_tmp.json
-    judge "modify Xray TLS Key File"
+    judge "modify V2ray TLS Key File"
     vray_tmp_config_file_check_and_use
     judge "change tmp file to main file"
 }
 
 function modify_PASSWORD() {
     cat ${vray_conf_dir}/config.json | jq 'setpath(["inbounds",0,"settings","clients",0,"password"];"'${PASSWORD}'")' >${vray_conf_dir}/config_tmp.json
-    judge "modify Xray Trojan Password"
+    judge "modify V2ray Trojan Password"
     vray_tmp_config_file_check_and_use
     judge "change tmp file to main file"
 }
@@ -674,7 +670,7 @@ function vmess_ws_tls() {
     domain_check
     vray_install
     configure_certbot
-    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/VMess-Websocket-TLS-s/config_server.json
+    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/VMess-Websocket-TLS-s/config.json
     judge "Download configuration"
     modify_port
     modify_UUID
@@ -733,7 +729,7 @@ function vmess_ws_nginx_tls() {
     add_wsPath_to_nginx
     setup_fake_website
     restart_nginx
-    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/VMess-Websocket-Nginx-TLS-s/server_config.json
+    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/VMess-Websocket-Nginx-TLS-s/server_config.json
     judge "Download configuration"
     modify_UUID
     modify_ws
@@ -783,7 +779,7 @@ function vmess_tcp_tls() {
     domain_check
     configure_certbot
     vray_install
-    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/VMess-TCP-TLS-s/config_server.json
+    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/VMess-TCP-TLS-s/config_server.json
     judge "Download configuration"
     modify_port
     modify_UUID
@@ -839,7 +835,7 @@ function trojan_tcp_tls() {
     domain_check
     vray_install
     configure_certbot
-    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/Trojan-TCP-TLS-s/config_server.json
+    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/Trojan-TCP-TLS-s/config_server.json
     judge "Download configuration"
     modify_port
     modify_PASSWORD
@@ -894,7 +890,7 @@ function trojan_ws_tls() {
     vray_install
     configure_certbot
     #get_ssl_cert
-    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/xray-examples/main/Trojan-Websocket-TLS-s/config_server.json
+    wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/Trojan-Websocket-TLS-s/config_server.json
     judge "Download configuration"
     modify_port
     modify_ws
@@ -1273,7 +1269,6 @@ function read_current_config() {
         current_network=$(cat ${config_path} | jq .inbounds[0].streamSettings.network)
         current_ws_path=$(cat ${config_path} | jq .inbounds[0].streamSettings.wsSettings.path)
         current_security=$(cat ${config_path} | jq .inbounds[0].streamSettings.security)
-        #current_active_connections=$(ss -tnp | grep "xray" | awk '{print $5}' | grep "\[::ffff" | grep -Eo "[0-9]{1,3}(\.[0-9]{1,3}){3}" | sort | uniq | wc -l)
 
         echo -e "========================================="
         echo -e "Users Count: ${current_users_count}"
