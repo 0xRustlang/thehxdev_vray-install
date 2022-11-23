@@ -15,10 +15,10 @@ White='\033[0;37m'
 vray_conf_dir="/etc/v2ray"
 vray_docker_compose_file="/root/docker-compose.yaml"
 config_path="/etc/v2ray/config.json"
-users_count_file="/etc/vray/users_count.txt"
-users_number_in_config_file="/etc/vray/users_number_in_config.txt"
-users_expiry_date_file="/etc/vray/users_expiry_date.txt"
-proto_file="/etc/vray/proto.txt"
+users_count_file="/etc/v2ray/users_count.txt"
+users_number_in_config_file="/etc/v2ray/users_number_in_config.txt"
+users_expiry_date_file="/etc/v2ray/users_expiry_date.txt"
+proto_file="/etc/v2ray/proto.txt"
 backup_dir="/root/vray_backup"
 website_dir="/var/www/html" 
 cert_group="nobody"
@@ -1305,6 +1305,15 @@ function read_current_config() {
     fi
 }
 
+function make_v2ray_dir() {
+    if [[ ! -e "${vray_conf_dir}" ]]; then
+        mkdir ${vray_conf_dir}
+        judge "Make v2ray config dir"
+    else
+        print_ok "v2ray Directory exists"
+    fi
+}
+
 # ===================================== #
 function vray_setup_menu() {
     clear
@@ -1321,25 +1330,34 @@ function vray_setup_menu() {
     read -rp "Enter an Option: " menu_num
     case $menu_num in
     1)
+        make_v2ray_dir
         vmess_ws_tls
         echo -e "1" > ${users_count_file}
         echo -e "1" > ${users_number_in_config_file}
         ;;
     2)
+        make_v2ray_dir
         vmess_ws_nginx_tls
         echo -e "1" > ${users_count_file}
         echo -e "1" > ${users_number_in_config_file}
         ;;
     3)
+        make_v2ray_dir
         vmess_tcp_tls
         echo -e "1" > ${users_count_file}
         echo -e "1" > ${users_number_in_config_file}
         ;;
     4)
+        make_v2ray_dir
         trojan_tcp_tls
+        echo -e "1" > ${users_count_file}
+        echo -e "1" > ${users_number_in_config_file}
         ;;
     5)
+        make_v2ray_dir
         trojan_ws_tls
+        echo -e "1" > ${users_count_file}
+        echo -e "1" > ${users_number_in_config_file}
         ;;
     6)
         exit 0
