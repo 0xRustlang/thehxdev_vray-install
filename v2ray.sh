@@ -668,7 +668,6 @@ function vmess_ws_tls() {
     basic_optimization
     ip_check
     domain_check
-    vray_install
     configure_certbot
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/VMess-Websocket-TLS-s/config.json
     judge "Download configuration"
@@ -676,7 +675,9 @@ function vmess_ws_tls() {
     modify_UUID
     modify_ws
     modify_tls
-    restart_vray
+    #restart_vray
+    ln -s -f ${config_path} /root/
+    vray_install
     vmess_ws_tls_link_gen
     CONFIG_PROTO="VmessWsTls"
     save_protocol
@@ -723,7 +724,6 @@ function vmess_ws_nginx_tls() {
     configure_certbot
     port_exist_check 80
     port_exist_check 443
-    vray_install
     install_nginx
     configure_nginx_reverse_proxy_tls
     add_wsPath_to_nginx
@@ -733,7 +733,10 @@ function vmess_ws_nginx_tls() {
     judge "Download configuration"
     modify_UUID
     modify_ws
-    restart_all
+    #restart_all
+    restart_nginx
+    ln -s -f ${config_path} /root/
+    vray_install
     vmess_ws_nginx_tls_link_gen
     CONFIG_PROTO="VmessWsNginxTls"
     save_protocol
@@ -778,13 +781,14 @@ function vmess_tcp_tls() {
     ip_check
     domain_check
     configure_certbot
-    vray_install
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/VMess-TCP-TLS-s/config_server.json
     judge "Download configuration"
     modify_port
     modify_UUID
     modify_tls
-    restart_vray
+    #restart_vray
+    ln -s -f ${config_path} /root/
+    vray_install
     vmess_tcp_tls_link_gen
     CONFIG_PROTO="VmessTcpTls"
     save_protocol
@@ -833,14 +837,15 @@ function trojan_tcp_tls() {
     basic_optimization
     ip_check
     domain_check
-    vray_install
     configure_certbot
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/Trojan-TCP-TLS-s/config_server.json
     judge "Download configuration"
     modify_port
     modify_PASSWORD
     modify_tls
-    restart_vray
+    #restart_vray
+    ln -s -f ${config_path} /root/
+    vray_install
     trojan_tcp_tls_link_gen
     CONFIG_PROTO="TrojanTcpTls"
     save_protocol
@@ -887,7 +892,6 @@ function trojan_ws_tls() {
     basic_optimization
     ip_check
     domain_check
-    vray_install
     configure_certbot
     #get_ssl_cert
     wget -O ${vray_conf_dir}/config.json https://raw.githubusercontent.com/thehxdev/vray-examples/main/Trojan-Websocket-TLS-s/config_server.json
@@ -896,7 +900,9 @@ function trojan_ws_tls() {
     modify_ws
     modify_PASSWORD
     modify_tls
-    restart_vray
+    #restart_vray
+    ln -s -f ${config_path} /root/
+    vray_install
     trojan_ws_tls_link_gen
     CONFIG_PROTO="TrojanWsTls"
     save_protocol
@@ -912,7 +918,6 @@ function dokodemo_door_setup() {
     install_deps
     basic_optimization
     ip_check
-    vray_install
     read -rp "Enter Listening Port: " LISTENING_PORT
     read -rp "Enter Foreign Server IP Address: " FOREIGN_SERVER_IP
     read -rp "Enter Foreign Server Port: " FOREIGN_SERVER_PORT
@@ -940,7 +945,9 @@ function dokodemo_door_setup() {
     ]
 }
 EOF
-    restart_vray
+    #restart_vray
+    ln -s -f ${config_path} /root/
+    vray_install
     CONFIG_PROTO="dokodemo"
     save_protocol
 }
