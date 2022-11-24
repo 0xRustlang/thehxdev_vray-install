@@ -12,11 +12,11 @@ Cyan='\033[0;36m'
 White='\033[0;37m' 
 
 # Variables
-vray_conf_dir="/etc/vray"
-config_path="/etc/vray/config.json"
-users_count_file="/etc/vray/users_count.txt"
-users_number_in_config_file="/etc/vray/users_number_in_config.txt"
-users_expiry_date_file="/etc/vray/users_expiry_date.txt"
+vray_conf_dir="/etc/v2ray"
+config_path="/etc/v2ray/config.json"
+users_count_file="/etc/v2ray/users_count.txt"
+users_number_in_config_file="/etc/v2ray/users_number_in_config.txt"
+users_expiry_date_file="/etc/v2ray/users_expiry_date.txt"
 
 OK="${Green}[OK]"
 ERROR="${Red}[ERROR]"
