@@ -493,7 +493,7 @@ function renew_certbot() {
 
 function vray_uninstall() {
     cd /root/
-    docker-compose down -d
+    docker-compose down -v
     rm -rf $website_dir/*
 
     print_ok "Do you want to Disable (Not uninstall) Nginx [y/n]?"
