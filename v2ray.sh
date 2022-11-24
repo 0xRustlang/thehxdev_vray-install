@@ -390,13 +390,37 @@ function install_docker() {
         print_ok "curl is installed"
     fi
 
-    curl https://get.docker.com | sh
+    #curl https://get.docker.com | sh
+
+    installit ca-certificates curl gnupg lsb-release
+    judge "install ca-certificates curl gnupg lsb-release"
+
+    if [[ ! -e "/etc/apt/keyrings" ]]; then
+        mkdir -p /etc/apt/keyrings
+        judge "Make apt keyring directory"
+    fi
+
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    judge "Add Docker repository"
+
+    apt update
+    judge "Update repositories"
+
+    apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    judge "install docker"
 
     installit docker-compose
     judge "Install docker-compose"
 }
 
 function vray_install() {
+    if [[ ! -e "/root/config.json" ]]; then
+        print_error "Can't find /roor/config.json file"
+        exit 1
+    fi
+
     install_docker
 
     tee ${vray_docker_compose_file} <<EOF
@@ -415,7 +439,7 @@ EOF
     if [[ -e "${vray_docker_compose_file}" ]]; then
         cd /root/
         docker-compose up -d
-        echo -e "${Cyan} Docker Proccesses:"
+        echo -e "${Cyan} Docker Proccesses:${Color_Off}"
         docker ps
     else
         print_error "Can't find v2ray docker-compose file."
