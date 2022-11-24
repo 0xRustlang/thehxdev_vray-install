@@ -516,9 +516,19 @@ function renew_certbot() {
 }
 
 function vray_uninstall() {
-    cd /root/
-    docker-compose down -v
-    rm -rf $website_dir/*
+    print_ok "Do you want to Uninstall V2ray? [y/n]"
+    read -r uninstall_vray
+    case $uninstall_vray in
+    [yY][eE][sS] | [yY])
+        cd /root/
+        docker-compose down -v
+        rm -rf $website_dir/*
+        rm -rf ${vray_docker_compose_file}
+        systemctl disable --now docker
+        apt purge -y docker-engine docker docker-compose docker.io docker-ce docker-ce-cli docker-compose-plugin
+        ;;
+    *) ;;
+    esac
 
     print_ok "Do you want to Disable (Not uninstall) Nginx [y/n]?"
     read -r disable_nginx
@@ -540,19 +550,6 @@ function vray_uninstall() {
     *) ;;
     esac
 
-    #if [[ -f /root/.acme.sh/ ]]; then
-    #    print_ok "Uninstall acme [y/n]?"
-    #    read -r uninstall_acme
-    #    case $uninstall_acme in
-    #    [yY][eE][sS] | [yY])
-    #        "$HOME"/.acme.sh/acme.sh --uninstall
-    #        rm -rf /root/.acme.sh
-    #        rm -rf /root/.ssl/
-    #        ;;
-    #    *) ;;
-    #    esac
-    #fi
-
     print_ok "Uninstall certbot (This will remove SSL Cert files too)? [y/n]?"
     read -r uninstall_certbot
     case $uninstall_certbot in
@@ -565,15 +562,6 @@ function vray_uninstall() {
         ;;
     *) ;;
     esac
-
-    #print_ok "Remove SSL certificates? [y/n]?"
-    #read -r remove_ssl_certs
-    #case $remove_ssl_certs in 
-    #	[yY][eE][sS] | [yY])
-    #    rm -rf /ssl/
-    #	;;
-    #*) ;;
-    #esac
 
     print_ok "Uninstall complete"
     exit 0
