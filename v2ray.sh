@@ -275,24 +275,11 @@ function restart_nginx(){
 }
 
 function configure_nginx_reverse_proxy_tls() {
-    rm -rf ${nginx_conf} && wget -O ${nginx_conf} https://raw.githubusercontent.com/thehxdev/xray-examples/main/nginx/nginx_reverse_proxy_tls.conf
+    rm -rf ${nginx_conf} && wget -O ${nginx_conf} https://raw.githubusercontent.com/thehxdev/vray-examples/main/nginx/nginx_reverse_proxy_tls.conf
     judge "Nginx config Download"
 
     sed -i "s/YOUR_DOMAIN/${domain}/g" ${nginx_conf}
     judge "Nginx config add domain"
-}
-
-function configure_nginx_reverse_proxy_notls() {
-    rm -rf ${nginx_conf} && wget -O ${nginx_conf} https://raw.githubusercontent.com/thehxdev/xray-examples/main/nginx/nginx_reverse_proxy_notls.conf
-    judge "Nginx config Download"
-
-    sed -i "s/YOUR_DOMAIN/${local_ipv4}/g" ${nginx_conf}
-    judge "Nginx config add ip"
-
-    systemctl enable --now nginx
-    judge "nginx start"
-    systemctl restart nginx
-    judge "nginx restart"
 }
 
 function add_wsPath_to_nginx() {
