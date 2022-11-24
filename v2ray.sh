@@ -525,7 +525,7 @@ function vray_uninstall() {
         rm -rf $website_dir/*
         rm -rf ${vray_docker_compose_file}
         systemctl disable --now docker
-        apt purge -y docker-engine docker docker-compose docker.io docker-ce docker-ce-cli docker-compose-plugin
+        apt purge -y docker-engine docker docker-compose docker.io docker-ce docker-ce-cli docker-compose-plugin containerd containerd.io
         ;;
     *) ;;
     esac
