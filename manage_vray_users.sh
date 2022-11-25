@@ -336,8 +336,8 @@ case $menu_number in
     echo -e ""
     first_run
     get_user_info
-    cd /root/
-    docker-compose restart
+    #cd /root/
+    #docker-compose restart
     ;;
 2)
     echo -e ""
