@@ -503,39 +503,55 @@ function renew_certbot() {
 }
 
 function vray_uninstall() {
-    print_ok "Do you want to Uninstall V2ray? [y/n]"
-    read -r uninstall_vray
-    case $uninstall_vray in
+    print_info "Do you want to Disable V2ray (This will keep docker and disables v2ray contaner)? [y/n]"
+    read -r disable_vray
+    case $disable_vray in
     [yY][eE][sS] | [yY])
         cd /root/
         docker-compose down -v
         rm -rf $website_dir/*
+        ;;
+    *) ;;
+    esac
+
+    print_info "Do you want to uninstall and purge docker? [y/n]"
+    read -r uninstall_docker
+    case $uninstall_docker in
+    [yY][eE][sS] | [yY])
+        cd /root/
         rm -rf ${vray_docker_compose_file}
+        judge "Remove v2ray docker-compose file"
         systemctl disable --now docker
+        judge "Disable Docker Service"
         apt purge -y docker-engine docker docker-compose docker.io docker-ce docker-ce-cli docker-compose-plugin containerd containerd.io
+        judge "Remove Docker"
         ;;
     *) ;;
     esac
 
-    print_ok "Do you want to Disable (Not uninstall) Nginx [y/n]?"
-    read -r disable_nginx
-    case $disable_nginx in
-    [yY][eE][sS] | [yY])
-        systemctl disable --now nginx.service
-        ;;
-    *) ;;
-    esac
+    if ! command -v nginx; then
+        print_info "Nginx is not installed"
+    else
+        print_info "Do you want to Disable (Not uninstall) Nginx (This will free 443 and 80 port) [y/n]?"
+        read -r disable_nginx
+        case $disable_nginx in
+        [yY][eE][sS] | [yY])
+            systemctl disable --now nginx.service
+            ;;
+        *) ;;
+        esac
 
-    print_ok "Do you want to uninstall Nginx [y/n]?"
-    read -r uninstall_nginx
-    case $uninstall_nginx in
-    [yY][eE][sS] | [yY])
-        rm -rf /var/www/html/*
-        systemctl disable --now nginx.service
-        apt purge nginx -y
-        ;;
-    *) ;;
-    esac
+        print_ok "Do you want to uninstall Nginx [y/n]?"
+        read -r uninstall_nginx
+        case $uninstall_nginx in
+        [yY][eE][sS] | [yY])
+            rm -rf /var/www/html/*
+            systemctl disable --now nginx.service
+            apt purge nginx -y
+            ;;
+        *) ;;
+        esac
+    fi
 
     print_ok "Uninstall certbot (This will remove SSL Cert files too)? [y/n]?"
     read -r uninstall_certbot
