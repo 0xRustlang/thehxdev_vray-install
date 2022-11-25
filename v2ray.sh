@@ -54,6 +54,7 @@ function installit() {
     apt install -y $*
 }
 
+# Check exit code of prev command
 function judge() {
     if [[ 0 -eq $? ]]; then
         print_ok "$1 Finished"
