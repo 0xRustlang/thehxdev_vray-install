@@ -541,7 +541,7 @@ function vray_uninstall() {
         *) ;;
         esac
 
-        print_ok "Do you want to uninstall Nginx [y/n]?"
+        print_info "Do you want to uninstall Nginx [y/n]?"
         read -r uninstall_nginx
         case $uninstall_nginx in
         [yY][eE][sS] | [yY])
@@ -553,7 +553,7 @@ function vray_uninstall() {
         esac
     fi
 
-    print_ok "Uninstall certbot (This will remove SSL Cert files too)? [y/n]?"
+    print_info "Uninstall certbot (This will remove SSL Cert files too)? [y/n]?"
     read -r uninstall_certbot
     case $uninstall_certbot in
     [yY][eE][sS] | [yY])
