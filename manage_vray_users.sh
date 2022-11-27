@@ -332,33 +332,37 @@ echo -e "${Cyan}5) exit\n${Color_Off}"
 read -rp "Enter menu Number: " menu_number
 
 case $menu_number in
-1)
-    echo -e ""
-    first_run
-    get_user_info
-    #cd /root/
-    #docker-compose restart
-    ;;
-2)
-    echo -e ""
-    first_run
-    add_new_user
-    cd /root/
-    docker-compose restart
-    ;;
-3)
-    users_exp_menu
-    ;;
-4)
-    echo -e ""
-    first_run
-    delete_user
-    cd /root/
-    docker-compose restart
-    ;;
-*)
-    print_error "Invalid Option"
-    exit 1
-    ;;
+    1)
+        echo -e ""
+        first_run
+        get_user_info
+        #cd /root/
+        #docker-compose restart
+        ;;
+    2)
+        echo -e ""
+        first_run
+        add_new_user
+        cd /root/
+        docker-compose restart
+        ;;
+    3)
+        users_exp_menu
+        ;;
+    4)
+        echo -e ""
+        first_run
+        delete_user
+        cd /root/
+        docker-compose restart
+        ;;
+    5)
+        print_ok "Exit"
+        exit 0
+        ;;
+    *)
+        print_error "Invalid Option"
+        exit 1
+        ;;
 esac
 
