@@ -504,6 +504,8 @@ function renew_certbot() {
 }
 
 function vray_uninstall() {
+    print_info "This option will remove V2ray!"
+    read -n1 -r -p "Press any key to continue Or press Ctrl+C to exit..."
     print_info "Do you want to Disable V2ray (This will keep docker and disables v2ray contaner)? [y/n]"
     read -r disable_vray
     case $disable_vray in
