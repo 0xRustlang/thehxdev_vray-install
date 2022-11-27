@@ -48,7 +48,6 @@ function judge() {
     fi
 }
 
-
 function user_counter() {
     users_count=$(cat ${users_count_file})
 
