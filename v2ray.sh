@@ -172,14 +172,14 @@ function basic_optimization() {
 }
 
 function ip_check() {
-    local_ipv4=$(curl -s4m8 https://ip.gs)
-    local_ipv6=$(curl -s6m8 https://ip.gs)
+    local_ipv4=$(curl -s4m8 https://icanhazip.com)
+    local_ipv6=$(curl -s6m8 https://icanhazip.com)
     if [[ -z ${local_ipv4} && -n ${local_ipv6} ]]; then
         print_ok "Pure IPv6 server"
-        SERVER_IP=$(curl -s6m8 https://ip.gs)
+        SERVER_IP=$(curl -s6m8 https://icanhazip.com)
     else
         print_ok "Server hase IPv4"
-        SERVER_IP=$(curl -s4m8 https://ip.gs)
+        SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     fi
 }
 
@@ -209,8 +209,8 @@ function domain_check() {
     #  wg-quick down wgcf >/dev/null 2>&1
     #  print_ok "wgcf-warp closed"
     #fi
-    local_ipv4=$(curl -s4m8 https://ip.gs)
-    local_ipv6=$(curl -s6m8 https://ip.gs)
+    local_ipv4=$(curl -s4m8 https://icanhazip.com)
+    local_ipv6=$(curl -s6m8 https://icanhazip.com)
     if [[ -z ${local_ipv4} && -n ${local_ipv6} ]]; then
         # Pure IPv6 VPS, automatically add DNS64 server for acme.sh to apply for certificate
         echo -e nameserver 2606:4700:4700::1111 > /etc/resolv.conf
@@ -655,7 +655,7 @@ function vmess_ws_tls_link_gen() {
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     server_link=$(echo -neE "{\"add\": \"$SERVER_IP\",\"aid\": \"0\",\"host\": \"\",\"id\": \"$UUID\",\"net\": \"ws\",\"path\": \"$WEBSOCKET_PATH\",\"port\": \"$PORT\",\"ps\": \"$config_name\",\"scy\": \"chacha20-poly1305\",\"sni\": \"$CONFIG_DOMAIN\",\"tls\": \"tls\",\"type\": \"\",\"v\": \"2\"}" | base64 | tr -d '\n')
 
     qrencode -t ansiutf8 -l L vmess://${server_link}
@@ -670,7 +670,7 @@ function users_vmess_ws_tls_link_gen() {
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     server_link=$(echo -neE "{\"add\": \"$SERVER_IP\",\"aid\": \"0\",\"host\": \"\",\"id\": \"$UUID\",\"net\": \"ws\",\"path\": \"$WEBSOCKET_PATH\",\"port\": \"$PORT\",\"ps\": \"$config_name\",\"scy\": \"chacha20-poly1305\",\"sni\": \"$CONFIG_DOMAIN\",\"tls\": \"tls\",\"type\": \"\",\"v\": \"2\"}" | base64 | tr -d '\n')
 
     qrencode -t ansiutf8 -l L vmess://${server_link}
@@ -707,7 +707,7 @@ function vmess_ws_nginx_tls_link_gen() {
     read -rp "Choose config name: " config_name
     UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].id | tr -d '"')
     WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     server_link=$(echo -neE "{\"add\": \"$SERVER_IP\",\"aid\": \"0\",\"host\": \"\",\"id\": \"$UUID\",\"net\": \"ws\",\"path\": \"$WEBSOCKET_PATH\",\"port\": \"443\",\"ps\": \"$config_name\",\"scy\": \"chacha20-poly1305\",\"sni\": \"$CONFIG_DOMAIN\",\"tls\": \"tls\",\"type\": \"\",\"v\": \"2\"}" | base64 | tr -d '\n')
 
@@ -721,7 +721,7 @@ function users_vmess_ws_nginx_tls_link_gen() {
     read -rp "Choose config name: " config_name
     UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[${user_number}].id | tr -d '"')
     WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     server_link=$(echo -neE "{\"add\": \"$SERVER_IP\",\"aid\": \"0\",\"host\": \"\",\"id\": \"$UUID\",\"net\": \"ws\",\"path\": \"$WEBSOCKET_PATH\",\"port\": \"443\",\"ps\": \"$config_name\",\"scy\": \"chacha20-poly1305\",\"sni\": \"$CONFIG_DOMAIN\",\"tls\": \"tls\",\"type\": \"\",\"v\": \"2\"}" | base64 | tr -d '\n')
 
@@ -766,7 +766,7 @@ function vmess_tcp_tls_link_gen() {
     UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].id | tr -d '"')
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     #WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     server_link=$(echo -neE "{\"add\": \"$SERVER_IP\",\"aid\": \"0\",\"host\": \"\",\"id\": \"$UUID\",\"net\": \"tcp\",\"path\": \"\",\"port\": \"$PORT\",\"ps\": \"$config_name\",\"scy\": \"chacha20-poly1305\",\"sni\": \"$CONFIG_DOMAIN\",\"tls\": \"tls\",\"type\": \"\",\"v\": \"2\"}" | base64 | tr -d '\n')
 
@@ -781,7 +781,7 @@ function users_vmess_tcp_tls_link_gen() {
     UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[${user_number}].id | tr -d '"')
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     #WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     server_link=$(echo -neE "{\"add\": \"$SERVER_IP\",\"aid\": \"0\",\"host\": \"\",\"id\": \"$UUID\",\"net\": \"tcp\",\"path\": \"\",\"port\": \"$PORT\",\"ps\": \"$config_name\",\"scy\": \"chacha20-poly1305\",\"sni\": \"$CONFIG_DOMAIN\",\"tls\": \"tls\",\"type\": \"\",\"v\": \"2\"}" | base64 | tr -d '\n')
 
@@ -821,7 +821,7 @@ function trojan_tcp_tls_link_gen() {
     #UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].id | tr -d '"')
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     #WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     PASSWORD=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].password | tr -d '"')
     server_link=$(echo -neE "$PASSWORD@$SERVER_IP:$PORT?sni=$CONFIG_DOMAIN&security=tls&type=tcp#$config_name")
@@ -837,7 +837,7 @@ function users_trojan_tcp_tls_link_gen() {
     #UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].id | tr -d '"')
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     #WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     PASSWORD=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[${user_number}].password | tr -d '"')
     server_link=$(echo -neE "$PASSWORD@$SERVER_IP:$PORT?sni=$CONFIG_DOMAIN&security=tls&type=tcp#$config_name")
@@ -876,7 +876,7 @@ function trojan_ws_tls_link_gen() {
     #UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].id | tr -d '"')
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     PASSWORD=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].password | tr -d '"')
     server_link=$(echo -neE "$PASSWORD@$SERVER_IP:$PORT?sni=$CONFIG_DOMAIN&security=tls&type=ws&path=$WEBSOCKET_PATH#$config_name")
@@ -892,7 +892,7 @@ function users_trojan_ws_tls_link_gen() {
     #UUID=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[0].id | tr -d '"')
     PORT=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].port)
     WEBSOCKET_PATH=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].streamSettings.wsSettings.path | tr -d '"')
-    SERVER_IP=$(curl -s4m8 https://ip.gs)
+    SERVER_IP=$(curl -s4m8 https://icanhazip.com)
     CONFIG_DOMAIN=$(cat /usr/local/domain.txt)
     PASSWORD=$(cat ${vray_conf_dir}/config.json | jq .inbounds[0].settings.clients[${user_number}].password | tr -d '"')
     server_link=$(echo -neE "$PASSWORD@$SERVER_IP:$PORT?sni=$CONFIG_DOMAIN&security=tls&type=ws&path=$WEBSOCKET_PATH#$config_name")
